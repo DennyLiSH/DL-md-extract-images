@@ -4,3 +4,9 @@ _*/
 _*
 
 CLAUDE.md
+
+# Python
+__pycache__/
+*.pyc
+*.bak
+__assets/

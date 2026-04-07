@@ -1,0 +1,25 @@
+[project]
+name = "md-extract-images"
+version = "0.1.0"
+description = "Extract inline base64 images from Markdown files into separate files"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+md-extract-images = "md_extract_images:main"
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM", "TCH", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
