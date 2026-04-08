@@ -52,10 +52,10 @@ def extract_images_from_md(
         print(f"Error reading {md_path}: {e}", file=sys.stderr)
         return []
 
-    if output_dir is None:
-        output_dir = md_path.parent / "__assets"
-
     stem = md_path.stem
+
+    if output_dir is None:
+        output_dir = md_path.parent / "__assets" / stem
     hash_to_filename: dict[str, str] = {}
     results: list[dict] = []
     seq = 0
@@ -88,11 +88,11 @@ def extract_images_from_md(
                 "size": len(img_bytes),
                 "dedup": True,
             })
-            return f"![{alt}](__assets/{filename})"
+            return f"![{alt}](__assets/{stem}/{filename})"
 
         ext = MIME_TO_EXT.get(mime, ".bin")
         seq += 1
-        filename = f"{stem}_{seq:03d}{ext}"
+        filename = f"{seq:03d}{ext}"
 
         if not dry_run:
             output_dir.mkdir(parents=True, exist_ok=True)
@@ -106,7 +106,7 @@ def extract_images_from_md(
             "size": len(img_bytes),
             "dedup": False,
         })
-        return f"![{alt}](__assets/{filename})"
+        return f"![{alt}](__assets/{stem}/{filename})"
 
     new_text = PATTERN.sub(replace_match, text)
 

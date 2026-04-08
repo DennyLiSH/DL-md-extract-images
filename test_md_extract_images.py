@@ -109,8 +109,8 @@ class TestExtractImages(unittest.TestCase):
         self.assertTrue(results[0]["filename"].endswith(".png"))
         self.assertEqual(results[0]["size"], len(MINI_PNG_BYTES))
 
-        # Check image file exists
-        assets_dir = self.tmpdir_p / "__assets"
+        # Check image file exists in __assets/test/ subdirectory
+        assets_dir = self.tmpdir_p / "__assets" / "test"
         img_file = assets_dir / results[0]["filename"]
         self.assertTrue(img_file.exists())
         self.assertEqual(img_file.read_bytes(), MINI_PNG_BYTES)
@@ -134,8 +134,8 @@ class TestExtractImages(unittest.TestCase):
 
         self.assertEqual(len(results), 2)
         filenames = [r["filename"] for r in results]
-        self.assertTrue(filenames[0].startswith("report_001"))
-        self.assertTrue(filenames[1].startswith("report_002"))
+        self.assertTrue(filenames[0].startswith("001"))
+        self.assertTrue(filenames[1].startswith("002"))
 
     def test_dedup_same_image(self):
         """Same image appearing twice should produce one file."""
@@ -153,7 +153,7 @@ class TestExtractImages(unittest.TestCase):
         self.assertEqual(results[0]["filename"], results[1]["filename"])
 
         # Only one image file on disk
-        assets_dir = self.tmpdir_p / "__assets"
+        assets_dir = self.tmpdir_p / "__assets" / "test"
         self.assertEqual(len(list(assets_dir.iterdir())), 1)
 
     def test_different_mime_types(self):
@@ -175,7 +175,7 @@ class TestExtractImages(unittest.TestCase):
         results = extract_images_from_md(md)
 
         self.assertEqual(len(results), 1)
-        assets_dir = self.tmpdir_p / "__assets"
+        assets_dir = self.tmpdir_p / "__assets" / "test"
         img_file = assets_dir / results[0]["filename"]
         self.assertEqual(img_file.read_bytes(), MINI_PNG_BYTES)
 
@@ -212,7 +212,7 @@ class TestExtractImages(unittest.TestCase):
 
         self.assertFalse(md.with_suffix(".md.bak").exists())
         # But image should still be extracted
-        self.assertTrue((self.tmpdir_p / "__assets").exists())
+        self.assertTrue((self.tmpdir_p / "__assets" / "test").exists())
 
     def test_custom_output_dir(self):
         """Custom output directory."""
@@ -233,7 +233,7 @@ class TestExtractImages(unittest.TestCase):
         md = self._write_md("test.md", f"![a & b <c>](data:image/png;base64,{MINI_PNG_B64})")
         extract_images_from_md(md)
         new_text = md.read_text(encoding="utf-8")
-        self.assertIn("![a & b <c>](__assets/", new_text)
+        self.assertIn("![a & b <c>](__assets/test/", new_text)
 
 
 class TestProcessPath(unittest.TestCase):
@@ -307,7 +307,7 @@ class TestCLI(unittest.TestCase):
             self.assertNotIn("base64,", new_text)
             self.assertIn("__assets/", new_text)
 
-            assets = Path(tmpdir) / "__assets"
+            assets = Path(tmpdir) / "__assets" / "test"
             self.assertTrue(assets.exists())
             self.assertEqual(len(list(assets.iterdir())), 1)
 
