@@ -10,8 +10,11 @@ dependencies = []
 md-extract-images = "md_extract_images:main"
 
 [build-system]
-requires = ["setuptools>=75.0"]
-build-backend = "setuptools.backends._legacy:_Backend"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["md_extract_images"]
 
 [tool.ruff]
 line-length = 88
